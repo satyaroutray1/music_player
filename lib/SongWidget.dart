@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:audio_manager/audio_manager.dart';
+import 'package:mp/playmusic.dart';
 
 import 'main.dart';
 import 'package:flutter/material.dart';
@@ -93,6 +94,13 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                             print(err);
                           });
                           playFABController.forward();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PlayMusic(
+                              song: "file://${song.filePath}",
+                            )),
+                          );
                         },
                         child: Row(
                           children: <Widget>[

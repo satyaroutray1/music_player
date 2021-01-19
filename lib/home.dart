@@ -54,7 +54,8 @@ class _HomeState extends State<Home> {
                     ),
                   )
                 ],
-              )/*Column(
+              )
+              /*Column(
                 children: [
                   RaisedButton(
                     child: Text('play'),
