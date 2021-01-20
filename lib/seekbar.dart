@@ -1,22 +1,38 @@
+import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'PlayBackControls.dart';
+import 'SongWidget.dart';
+import 'presenter/formatConverter.dart';
 
 class SeekBar extends StatefulWidget {
+  final String duration;
+  SeekBar({this.duration});
   @override
   _SeekBarState createState() => _SeekBarState();
 }
 
-//var audioManagerInstance = AudioManager.instance;
-
+var audioManagerInstance = AudioManager.instance;
 
 class _SeekBarState extends State<SeekBar> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("formatDuration(audioManagerInstance.position): ${formatDuration(audioManagerInstance.position)}");
+    print("formatDuration(audioManagerInstance.duration${parseToMinutesSeconds(int.parse(widget.duration))}))");
+
+    //print("formatDuration(audioManagerInstance.duration${(widget.duration).runtimeType}))");
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
         Text(
           formatDuration(audioManagerInstance.position),
+          //widget.time.inSeconds.toString(),
           style: Theme.of(context).textTheme.subtitle2,
         ),
         Expanded(
@@ -38,7 +54,10 @@ class _SeekBarState extends State<SeekBar> {
                   inactiveTrackColor: Theme.of(context).dividerColor,
                 ),
                 child: Slider(
-                  value: slider ?? 0,
+                  min: 0.0,
+                  max: 10,
+                  value: //widget.position.inSeconds.toDouble(),//
+                  slider ?? 0,
                   onChanged: (value) {
                     setState(() {
                       slider = value;
@@ -48,9 +67,7 @@ class _SeekBarState extends State<SeekBar> {
                     if (audioManagerInstance.duration != null) {
                       Duration msec = Duration(
                           milliseconds:
-                          (audioManagerInstance.duration.inMilliseconds *
-                              value)
-                              .round());
+                          (audioManagerInstance.duration.inMilliseconds * value).round());
                       audioManagerInstance.seekTo(msec);
                     }
                   },
@@ -58,20 +75,16 @@ class _SeekBarState extends State<SeekBar> {
           ),
         ),
         Text(
-          formatDuration(audioManagerInstance.duration),
+          //formatDuration(audioManagerInstance.duration),
+          parseToMinutesSeconds(int.parse(widget.duration)),
           style: Theme.of(context).textTheme.subtitle2,
         ),
       ],
     );
   }
 }
+void seekToSecond(int second){
+  Duration newDuration = Duration(seconds: second);
 
-String formatDuration(Duration d) {
-  if (d == null) return "--:--";
-  int minute = d.inMinutes;
-  int second = (d.inSeconds > 60) ? (d.inSeconds % 60) : d.inSeconds;
-  String format = ((minute < 10) ? "0$minute" : "$minute") +
-      ":" +
-      ((second < 10) ? "0$second" : "$second");
-  return format;
+  //audioPlayer.seek(newDuration);
 }

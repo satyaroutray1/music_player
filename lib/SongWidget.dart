@@ -3,7 +3,7 @@ import 'package:mp/playmusic.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
-
+import 'seekbar.dart';
 class SongWidget extends StatefulWidget {
   final List<SongInfo> songList;
 
@@ -80,18 +80,10 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                       ),
                       title: InkWell(
                         onTap: () {
-                          /*audioManagerInstance
-                              .start("file://${song.filePath}", song.title,
-                              desc: song.displayName,
-                              auto: true,
-                              cover: song.albumArtwork)
-                              .then((err) {
-                            print(err);
-                          });
-
-                           */
                           print("file://${song.filePath}");
-                          print(song);
+                          print(song.duration.runtimeType);
+                          print(song.duration);
+                          print(parseToMinutesSeconds(int.parse(song.duration)));
 
                           Navigator.push(
                             context,
@@ -99,9 +91,12 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                               songpath: "file://${song.filePath}",
                               songName: song.displayName,
                               songInfo: song,
+                              songDuration: song.duration.toString(),
+
 
                             )),
                           );
+
                         },
                         child: Row(
                           children: <Widget>[
@@ -165,4 +160,19 @@ String parseToMinutesSeconds(int ms) {
 
   data += seconds.toString();
   return data;
+}
+
+Duration parseDuration1(String s) {
+  int hours = 0;
+  int minutes = 0;
+  int micros;
+  List<String> parts = s.split(':');
+  if (parts.length > 2) {
+    hours = int.parse(parts[parts.length - 3]);
+  }
+  if (parts.length > 1) {
+    minutes = int.parse(parts[parts.length - 2]);
+  }
+  micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
+  return Duration(hours: hours, minutes: minutes, microseconds: micros);
 }

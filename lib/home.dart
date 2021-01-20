@@ -14,14 +14,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  AudioPlayer audioPlayer;
-  //AudioCache audioCache;
 
   @override
   void initState() {
     super.initState();
-    audioPlayer = new AudioPlayer();
-    //audioCache = new AudioCache(fixedPlayer: audioPlayer);
   }
 
   @override

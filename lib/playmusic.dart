@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:audio_manager/audio_manager.dart';
@@ -5,18 +6,21 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:mp/seekbar.dart';
-
 import 'SongWidget.dart';
+import 'presenter/formatConverter.dart';
 
 class PlayMusic extends StatefulWidget {
 
-  final String songpath, songName, songDuration;
+  final String songpath, songName;
+  final String songDuration;
   final SongInfo songInfo;
   PlayMusic({this.songpath, this.songName, this.songDuration, this.songInfo});
 
   @override
   _PlayMusicState createState() => _PlayMusicState();
 }
+
+enum PlayerState { stopped, playing, paused }
 
 class _PlayMusicState extends State<PlayMusic> {
   AudioPlayer audioPlayer;
@@ -30,12 +34,64 @@ class _PlayMusicState extends State<PlayMusic> {
     audioPlayer = new AudioPlayer();
     //audioCache = new AudioCache(fixedPlayer: audioPlayer);
     audioManagerInstance = AudioManager.instance;
+    initAudioPlayer();
   }
+
+  Duration duration;
+  Duration position;
+  PlayerState playerState = PlayerState.stopped;
+
+  StreamSubscription _positionSubscription;
+  StreamSubscription _audioPlayerStateSubscription;
+
+  get isPlaying => playerState == PlayerState.playing;
+  get isPaused => playerState == PlayerState.paused;
+
+  get durationText =>
+      duration != null ? duration.toString().split('.').first : '';
+
+  get positionText =>
+      position != null ? position.toString().split('.').first : '';
+  void onComplete() {
+    setState(() => playerState = PlayerState.stopped);
+  }
+  void initAudioPlayer() {
+    _positionSubscription = audioPlayer.onAudioPositionChanged.listen((p) {
+      setState(() {
+        position = p;
+      });
+    });
+
+    _audioPlayerStateSubscription =
+        audioPlayer.onPlayerStateChanged.listen((s) {
+          if (s == AudioPlayerState.PLAYING) {
+            setState(() {
+              duration = audioPlayer.duration;
+            });
+          } else if (s == AudioPlayerState.STOPPED) {
+            onComplete();
+            setState(() {
+              position = duration;
+            });
+          }
+        }, onError: (msg) {
+          setState(() {
+            playerState = PlayerState.stopped;
+            duration = Duration(seconds: 0);
+            position = parseDuration(widget.songDuration);
+            //Duration(seconds: 0);
+          });
+        });
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          extendBodyBehindAppBar: true,
             body: Container(
               height: double.infinity,
               decoration: new BoxDecoration(
@@ -53,7 +109,27 @@ class _PlayMusicState extends State<PlayMusic> {
                 children: [
                   Container(
                     height: MediaQuery.of(context).size.height*.3,
-                    child: Text('Now Playing'),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RawMaterialButton(
+                          onPressed: (){
+
+                          },
+                          //elevation: 2.0,
+                          fillColor: Color(0xFFC3F5FF),
+                          child: Icon(Icons.arrow_back, color: Colors.white,
+                          ),
+                          padding: EdgeInsets.all(0.0),
+                          shape: CircleBorder(),
+                        ),
+
+                        Padding(padding: EdgeInsets.only(top: 15),
+                        child: Text('Now Playing', style: TextStyle(
+                          color: Colors.white, //fontSize: Theme.of(context).textTheme.bodyText1.height //.headline3.height
+                        ),))
+                      ],
+                    ),
                   ),
 
                   Container(
@@ -77,25 +153,27 @@ class _PlayMusicState extends State<PlayMusic> {
                         Text(widget.songName),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: SeekBar(),
+
+                          child: SeekBar(
+
+                            duration: widget.songDuration,
+                          ),
                         ),
 
                         SizedBox(
                           height: 20,
                         ),
+
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            RaisedButton(
-                              child: Text('play'),
-                              onPressed: () async{
-
+                            MS(icon: Icons.play_arrow_rounded,
+                              function: () async{
                                 audioPlayer.stop();
 
                                 await audioPlayer.play(widget.songpath, isLocal: true);
 
-                                //print("file://${(widget.songInfo).filePath}");
-                                print("${widget.songpath}");
                                 audioManagerInstance
                                     .start("${widget.songpath}",
                                     widget.songInfo.title,
@@ -106,30 +184,25 @@ class _PlayMusicState extends State<PlayMusic> {
                                   print(err);
                                 });
 
+                              },),
+                            MS(icon: Icons.pause,
+                            function: () async{
+                              await audioPlayer.pause();
+                              initAudioPlayer();
 
-                              },
-                            ),
+                            },),
+                            MS(icon: Icons.stop,
+                            function: () async{
 
-                            RaisedButton(
-                              child: Text('stop'),
-                              onPressed: () async{
-                                await audioPlayer.stop();
-                              },
-                            ),
+                              //print("*********${audioPlayer.duration}");
 
-                            RaisedButton(
-                              child: Text('pause'),
-                              onPressed: () async{
-                                await audioPlayer.pause();
-                              },
-                            ),
-
-                            RaisedButton(
-                              child: Text('resume'),
-                              onPressed: () async{
-                                //await audioPlayer.resume();
-                              },
-                            ),
+                              await audioPlayer.stop();
+                              audioManagerInstance.stop();
+                            },),
+                            MS(icon: Icons.forward_30,
+                            function: ()async{
+                            },),
+                            MS(icon: Icons.replay_30_outlined),
 
                           ],
                         ),
@@ -140,14 +213,25 @@ class _PlayMusicState extends State<PlayMusic> {
                   ),
                   Container(
                       padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * .27,
+                        top: MediaQuery.of(context).size.height * .21,
 
                       ),
                       width: double.infinity,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(Icons.music_note, size: 80,)
+                          RawMaterialButton(
+                            onPressed: (){
+
+                            },
+                              elevation: 10.0,
+                              fillColor: Color(0xFFC3F5FF),
+                              child: Icon(Icons.music_note, size: 180, //color: Color(0xFF70C4D5),
+                              ),
+                            padding: EdgeInsets.all(10.0),
+                            shape: CircleBorder(),
+                          ),
+
                         ],
                       )
                   ),
@@ -155,6 +239,38 @@ class _PlayMusicState extends State<PlayMusic> {
               ),
             )
         )
+    );
+  }
+}
+
+class MS extends StatefulWidget {
+
+  IconData icon;
+  Function function;
+  MS({this.icon, this.function});
+
+  @override
+  _MSState createState() => _MSState();
+}
+
+class _MSState extends State<MS> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Expanded(
+        flex: 1,
+        child: RawMaterialButton(
+          onPressed: (){
+            widget.function();
+          },
+          //elevation: 2.0,
+          fillColor: Color(0xFF70C4D5),
+          child: Icon(widget.icon, color: Colors.white,
+          ),
+          shape: CircleBorder(),
+        ),
+      ),
     );
   }
 }
