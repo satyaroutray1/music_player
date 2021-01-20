@@ -1,13 +1,18 @@
 import 'dart:ffi';
 
-import 'package:audioplayers/audio_cache.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audio_manager/audio_manager.dart';
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:mp/seekbar.dart';
+
+import 'SongWidget.dart';
 
 class PlayMusic extends StatefulWidget {
 
-  final String song;
-  PlayMusic({this.song});
+  final String song, songName, songDuration;
+  final SongInfo songpath;
+  PlayMusic({this.song, this.songName, this.songDuration, this.songpath});
 
   @override
   _PlayMusicState createState() => _PlayMusicState();
@@ -15,14 +20,16 @@ class PlayMusic extends StatefulWidget {
 
 class _PlayMusicState extends State<PlayMusic> {
   AudioPlayer audioPlayer;
-  AudioCache audioCache;
+  //AudioCache audioCache;
+  var audioManagerInstance;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     audioPlayer = new AudioPlayer();
-    audioCache = new AudioCache(fixedPlayer: audioPlayer);
+    //audioCache = new AudioCache(fixedPlayer: audioPlayer);
+    audioManagerInstance = AudioManager.instance;
 
   }
   @override
@@ -64,40 +71,67 @@ class _PlayMusicState extends State<PlayMusic> {
                           ),
 
                       ),
-                    child: Row(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RaisedButton(
-                            child: Text('play'),
-                            onPressed: () async{
-                              //await audioCache.play(widget.song);
-                              await audioPlayer.play(widget.song, isLocal: true);
-                            },
-                          ),
+                      children: [
 
-                          RaisedButton(
-                            child: Text('stop'),
-                            onPressed: () async{
-                              await audioPlayer.stop();
-                            },
-                          ),
+                        Text(widget.songName),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: SeekBar(),
+                        ),
 
-                          RaisedButton(
-                            child: Text('pause'),
-                            onPressed: () async{
-                              await audioPlayer.pause();
-                            },
-                          ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RaisedButton(
+                              child: Text('play'),
+                              onPressed: () async{
 
-                          RaisedButton(
-                            child: Text('resume'),
-                            onPressed: () async{
-                              await audioPlayer.resume();
-                            },
-                          ),
+                                audioPlayer.stop();
+                                await audioPlayer.play(widget.song, isLocal: true);
+                                /*audioManagerInstance
+                                    .start("file://${widget.songpath.filePath}", song.title,
+                                    desc: song.displayName,
+                                    auto: true,
+                                    cover: song.albumArtwork)
+                                    .then((err) {
+                                  print(err);
+                                });
 
-                        ],
-                      ),
+                                 */
+                              },
+                            ),
+
+                            RaisedButton(
+                              child: Text('stop'),
+                              onPressed: () async{
+                                await audioPlayer.stop();
+                              },
+                            ),
+
+                            RaisedButton(
+                              child: Text('pause'),
+                              onPressed: () async{
+                                await audioPlayer.pause();
+                              },
+                            ),
+
+                            RaisedButton(
+                              child: Text('resume'),
+                              onPressed: () async{
+                                //await audioPlayer.resume();
+                              },
+                            ),
+
+                          ],
+                        ),
+
+                      ],
+                    )
                     ),
                   ),
                   Container(

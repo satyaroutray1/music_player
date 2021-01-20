@@ -80,7 +80,7 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                       ),
                       title: InkWell(
                         onTap: () {
-                          audioManagerInstance
+                          /*audioManagerInstance
                               .start("file://${song.filePath}", song.title,
                               desc: song.displayName,
                               auto: true,
@@ -88,12 +88,15 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                               .then((err) {
                             print(err);
                           });
-                          //playFABController.forward();
+
+                           */
 
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => PlayMusic(
                               song: "file://${song.filePath}",
+                              songName: song.displayName,
+
                             )),
                           );
                         },

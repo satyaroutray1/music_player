@@ -1,5 +1,5 @@
-import 'package:audioplayers/audio_cache.dart';
-import 'package:audioplayers/audioplayers.dart';
+
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,13 +15,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   AudioPlayer audioPlayer;
-  AudioCache audioCache;
+  //AudioCache audioCache;
 
   @override
   void initState() {
     super.initState();
     audioPlayer = new AudioPlayer();
-    audioCache = new AudioCache(fixedPlayer: audioPlayer);
+    //audioCache = new AudioCache(fixedPlayer: audioPlayer);
   }
 
   @override
