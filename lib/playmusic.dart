@@ -10,9 +10,9 @@ import 'SongWidget.dart';
 
 class PlayMusic extends StatefulWidget {
 
-  final String song, songName, songDuration;
-  final SongInfo songpath;
-  PlayMusic({this.song, this.songName, this.songDuration, this.songpath});
+  final String songpath, songName, songDuration;
+  final SongInfo songInfo;
+  PlayMusic({this.songpath, this.songName, this.songDuration, this.songInfo});
 
   @override
   _PlayMusicState createState() => _PlayMusicState();
@@ -30,8 +30,8 @@ class _PlayMusicState extends State<PlayMusic> {
     audioPlayer = new AudioPlayer();
     //audioCache = new AudioCache(fixedPlayer: audioPlayer);
     audioManagerInstance = AudioManager.instance;
-
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -53,7 +53,6 @@ class _PlayMusicState extends State<PlayMusic> {
                 children: [
                   Container(
                     height: MediaQuery.of(context).size.height*.3,
-
                     child: Text('Now Playing'),
                   ),
 
@@ -92,17 +91,22 @@ class _PlayMusicState extends State<PlayMusic> {
                               onPressed: () async{
 
                                 audioPlayer.stop();
-                                await audioPlayer.play(widget.song, isLocal: true);
-                                /*audioManagerInstance
-                                    .start("file://${widget.songpath.filePath}", song.title,
-                                    desc: song.displayName,
+
+                                await audioPlayer.play(widget.songpath, isLocal: true);
+
+                                //print("file://${(widget.songInfo).filePath}");
+                                print("${widget.songpath}");
+                                audioManagerInstance
+                                    .start("${widget.songpath}",
+                                    widget.songInfo.title,
+                                    desc: widget.songInfo.displayName,
                                     auto: true,
-                                    cover: song.albumArtwork)
+                                    cover: widget.songInfo.albumArtwork)
                                     .then((err) {
                                   print(err);
                                 });
 
-                                 */
+
                               },
                             ),
 
@@ -149,6 +153,8 @@ class _PlayMusicState extends State<PlayMusic> {
                   ),
                 ],
               ),
-            )));
+            )
+        )
+    );
   }
 }

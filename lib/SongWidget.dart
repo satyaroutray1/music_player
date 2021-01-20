@@ -90,19 +90,21 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                           });
 
                            */
+                          print("file://${song.filePath}");
+                          print(song);
 
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => PlayMusic(
-                              song: "file://${song.filePath}",
+                              songpath: "file://${song.filePath}",
                               songName: song.displayName,
+                              songInfo: song,
 
                             )),
                           );
                         },
                         child: Row(
                           children: <Widget>[
-                            //getAlbumArt(song),
                             Container(
                               width: MediaQuery
                                   .of(context)
