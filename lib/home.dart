@@ -19,75 +19,87 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     audioPlayer = new AudioPlayer();
     audioCache = new AudioCache(fixedPlayer: audioPlayer);
-
-    getL();
   }
 
-  Future<String> getL() async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    print(directory.path);
-    return directory.path;
-  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
             body: Container(
-              child: Column(
+                decoration: new BoxDecoration(
+                  gradient: new LinearGradient(
+                      colors: [
+                        const Color(0xFFC3F5FF),
+                        const Color(0xFF70C4D5),
+                      ],
+                      begin: const FractionalOffset(0.0, 0.0),
+                      end: const FractionalOffset(1.0, 0.0),
+                      stops: [0.0, 1.0],
+                      tileMode: TileMode.clamp),
+                ),
+              child: Stack(
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: FutureBuilder(
-                      future: FlutterAudioQuery().getSongs(sortType: SongSortType.DISPLAY_NAME),
-                      builder: (context, snapshot) {
-                        List<SongInfo> songInfo = snapshot.data;
-                        if (snapshot.hasData) {
-                          return SongWidget(songList: songInfo);
-                        }
-                        return LoadingIndicator();
-                      },
+                  Container(
+
+                    height: MediaQuery.of(context).size.height*.25,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.music_note_outlined, size: 30,),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Music Player', style: TextStyle(
+                              fontSize: 25,
+                            ),textAlign: TextAlign.center,),
+                            RaisedButton(onPressed: (){
+
+                              },
+                              child: Text('Play'),
+                            )
+                          ],
+                        )
+                      ],
                     ),
-                  )
+                  ),
+                  Container(
+                    padding: new EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * .25,),
+                    
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40)),
+
+                      ),
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: FutureBuilder(
+                              future: FlutterAudioQuery().getSongs(sortType: SongSortType.DISPLAY_NAME),
+                              builder: (context, snapshot) {
+                                List<SongInfo> songInfo = snapshot.data;
+                                if (snapshot.hasData) {
+                                  return SongWidget(songList: songInfo);
+                                }
+                                return LoadingIndicator();
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               )
-              /*Column(
-                children: [
-                  RaisedButton(
-                    child: Text('play'),
-                    onPressed: () async{
-                      await audioCache.play('audio/new.mp3');
-                    },
-                  ),
-
-                  RaisedButton(
-                    child: Text('stop'),
-                    onPressed: () async{
-                      await audioPlayer.stop();
-                    },
-                  ),
-
-                  RaisedButton(
-                    child: Text('pause'),
-                    onPressed: () async{
-                      await audioPlayer.pause();
-                    },
-                  ),
-
-                  RaisedButton(
-                    child: Text('resume'),
-                    onPressed: () async{
-                      await audioPlayer.resume();// .play('audio/new.mp3');
-                    },
-                  ),
-
-                  MyMusicList()
-                ],
-              ),*/
             )
         )
     );

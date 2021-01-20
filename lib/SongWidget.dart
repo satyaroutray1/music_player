@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:audio_manager/audio_manager.dart';
 import 'package:mp/playmusic.dart';
 
-import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 
@@ -14,21 +12,23 @@ class SongWidget extends StatefulWidget {
   @override
   _SongWidgetState createState() => _SongWidgetState();
 }
-AnimationController playFABController;
+//AnimationController playFABController;
 var audioManagerInstance = AudioManager.instance;
 
 class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    playFABController =
+    /*playFABController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+
+     */
   }
 
   @override
   void dispose() {
     super.dispose();
-    playFABController.dispose();
+    //playFABController.dispose();
   }
 
   @override
@@ -93,7 +93,7 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                               .then((err) {
                             print(err);
                           });
-                          playFABController.forward();
+                          //playFABController.forward();
 
                           Navigator.push(
                             context,
