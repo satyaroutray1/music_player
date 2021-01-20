@@ -19,16 +19,11 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    /*playFABController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-
-     */
   }
 
   @override
   void dispose() {
     super.dispose();
-    //playFABController.dispose();
   }
 
   @override
