@@ -223,7 +223,6 @@ class _PlayMusicState extends State<PlayMusic> {
                   Container(
                       padding: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height * .21,
-
                       ),
                       width: double.infinity,
                       child: Column(

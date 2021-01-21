@@ -3,7 +3,7 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'adart_icons.dart';
 import 'LoadingIndicator.dart';
 import 'SongWidget.dart';
 
@@ -44,17 +44,51 @@ class _HomeState extends State<Home> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Icon(Icons.music_note_outlined, size: 30,),
+                        Image.asset('assets/images/headphones.png',
+                        height: MediaQuery.of(context).size.width/5,
+                          width: MediaQuery.of(context).size.width/5,),
+
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text('Music Player', style: TextStyle(
-                              fontSize: 25,
-                            ),textAlign: TextAlign.center,),
-                            RaisedButton(onPressed: (){
+                              fontSize: 30, color: Colors.white
+                            ),textAlign: TextAlign.right,),
 
-                              },
-                              child: Text('Play'),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: Colors.transparent,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0.0, 5.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: RaisedButton(onPressed: (){
+
+                                  },
+                                    child: Text('Play'),
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      //side: BorderSide(color: Colors.red)
+                                    ),
+
+
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Icon(Icons.favorite_border, color: Colors.grey,)
+                              ],
                             )
                           ],
                         )

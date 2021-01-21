@@ -36,7 +36,7 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
             itemCount: widget.songList.length,
             itemBuilder: (context, songIndex) {
               SongInfo song = widget.songList[songIndex];
-              if (song.displayName.contains(".mp3"))
+              if (song.displayName.contains(".mp3")) {
                 return Container(
                   decoration: BoxDecoration(
                     border: Border(
@@ -54,6 +54,7 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
+                          /*
                           IconButton(
                             icon: Icon(
                               Icons.more_vert,
@@ -78,6 +79,49 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                                   ]);
                             },
                           )
+
+                           */
+
+                      /*
+                          IconButton(icon: Icon(Icons.play_circle_fill,
+                          color: Colors.black,
+                          size: 35,),
+                              onPressed: (){
+
+                          })*/
+
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(0.0, 8.0), //(x,y)
+                                  blurRadius: 6.0,
+                                ),
+                              ],
+                            ),
+                            child: InkWell(
+                                child: Image.asset('assets/images/play.png',),
+                            onTap: (){
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => PlayMusic(
+                                  songpath: "file://${song.filePath}",
+                                  songName: song.displayName,
+                                  songInfo: song,
+                                  songDuration: song.duration.toString(),
+
+
+                                )),
+                              );
+                            },)),
+                      )
+
                         ],
                       ),
                       title: InkWell(
@@ -114,21 +158,23 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Text(song.title,
+
                                       overflow: TextOverflow.ellipsis,
                                       style: Theme
                                           .of(context)
                                           .textTheme
                                           .headline6),
+                                  /*
                                   Text(song.artist,
                                       overflow: TextOverflow.ellipsis,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .subtitle2),
+                                          .subtitle2),*/
                                   Text(
                                       parseToMinutesSeconds(
                                           int.parse(song.duration)),
                                       style: TextStyle(
-                                          fontSize: 11,
+                                          fontSize: 12,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w500)),
                                 ],
@@ -140,6 +186,7 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                     ),
                   ),
                 );
+              }
               return SizedBox(
                 height: 0,
               );
