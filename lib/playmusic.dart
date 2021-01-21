@@ -62,6 +62,7 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
             parent: animationController,
             curve: Curves.easeIn));
 
+    isSongPaused = false;
   }
 
   void now(){
@@ -120,6 +121,7 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
     animationController.dispose();
   }
 
+  bool isSongPaused;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -162,7 +164,7 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                         ),
 
                         Padding(padding: EdgeInsets.only(top: 10),
-                        child: Text('Now Playing', style: TextStyle(
+                        child: Text('Music Player', style: TextStyle(
                           color: Colors.white,
                           fontSize: Theme.of(context).textTheme.headline5.fontSize //.headline3.height
                         ),))
@@ -230,12 +232,29 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                               },),
 
 
-                            MusicSystem(icon: Icons.pause,
-                            function: () async{
-                              await audioPlayer.pause();
-                              //initAudioPlayer();
-                              animationController.stop();
-                            },),
+                            MusicSystem(icon: isSongPaused? Icons.play_circle_fill: Icons.pause,
+                              function: () async {
+                                if(!isSongPaused) {
+
+                                  await audioPlayer.pause();
+                                  animationController.stop();
+
+                                  setState(() {
+                                    isSongPaused = true;
+
+                                  });
+                                }else{
+                                  setState(() {
+                                    isSongPaused =false;
+
+                                  });
+                                  audioPlayer.play(widget.songpath, isLocal: true);
+                                  audioPlayer.seek(((position.inMilliseconds+1000)/1000).toDouble());
+                                  animationController.repeat();
+
+                                }
+                                },
+                            ),
 
                             MusicSystem(icon: Icons.play_arrow_rounded,
                               function: () async{
@@ -247,7 +266,7 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                                 audioManagerInstance
                                     .start("${widget.songpath}",
                                     widget.songInfo.title,
-                                    desc: widget.songInfo.displayName,
+                                    //desc: widget.songInfo.displayName,
                                     auto: true,
                                     cover: widget.songInfo.albumArtwork)
                                     .then((err) {
