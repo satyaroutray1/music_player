@@ -44,9 +44,12 @@ class _HomeState extends State<Home> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Image.asset('assets/images/headphones.png',
-                        height: MediaQuery.of(context).size.width/5,
-                          width: MediaQuery.of(context).size.width/5,),
+                        Hero(
+                          tag: 'logo',
+                          child: Image.asset('assets/images/headphones.png',
+                          height: MediaQuery.of(context).size.width/5,
+                            width: MediaQuery.of(context).size.width/5,),
+                        ),
 
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -24,10 +24,14 @@ enum PlayerState { stopped, playing, paused }
 
 Duration duration;
 Duration position;
-class _PlayMusicState extends State<PlayMusic> {
+class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMixin{
+
   AudioPlayer audioPlayer;
   //AudioCache audioCache;
   var audioManagerInstance;
+
+  Animation flipAnimation;
+  AnimationController animationController;
 
   @override
   void initState() {
@@ -40,6 +44,13 @@ class _PlayMusicState extends State<PlayMusic> {
     duration = Duration(seconds: 0);
     initAudioPlayer();
 
+    animationController = AnimationController(duration: Duration(seconds: 1), vsync: this);
+    flipAnimation = Tween(begin:  0.0, end: 1).animate(
+        CurvedAnimation(parent: animationController,
+            curve: Interval(
+                0,1, curve: Curves.linear
+            ))
+    );
   }
 
   void now(){
@@ -123,15 +134,20 @@ class _PlayMusicState extends State<PlayMusic> {
                           },
                           //elevation: 2.0,
                           fillColor: Color(0xFFC3F5FF),
-                          child: Icon(Icons.arrow_back, color: Colors.white,
+                          child: IconButton(
+                            icon: Icon(Icons.arrow_back, color: Colors.white,),
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
                           ),
                           padding: EdgeInsets.all(0.0),
                           shape: CircleBorder(),
                         ),
 
-                        Padding(padding: EdgeInsets.only(top: 15),
+                        Padding(padding: EdgeInsets.only(top: 10),
                         child: Text('Now Playing', style: TextStyle(
-                          color: Colors.white, //fontSize: Theme.of(context).textTheme.bodyText1.height //.headline3.height
+                          color: Colors.white,
+                          fontSize: Theme.of(context).textTheme.headline5.fontSize //.headline3.height
                         ),))
                       ],
                     ),
@@ -155,7 +171,15 @@ class _PlayMusicState extends State<PlayMusic> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
 
-                        Text(widget.songName),
+                        Hero(
+                          tag: "${(widget.songName)}",
+                          child: Text(widget.songName,
+                              style: Theme.of(context).textTheme.headline6
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
 
@@ -234,9 +258,13 @@ class _PlayMusicState extends State<PlayMusic> {
                             },
                               elevation: 10.0,
                               fillColor: Color(0xFFC3F5FF),
-                              child: Icon(Icons.music_note, size: 180, //color: Color(0xFF70C4D5),
-                              ),
-                            padding: EdgeInsets.all(10.0),
+                              child: Hero(
+                                tag: 'logo',
+                                child: Image.asset('assets/images/headphones.png',
+                                  height: MediaQuery.of(context).size.width/2.5,
+                                  width: MediaQuery.of(context).size.width/2.5,),
+                              ),//Icon(Icons.music_note, size: 180,),
+                            padding: EdgeInsets.all(30.0),
                             shape: CircleBorder(),
                           ),
 

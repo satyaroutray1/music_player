@@ -157,13 +157,17 @@ class _SongWidgetState extends State<SongWidget> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Text(song.title,
+                                  Hero(
 
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .headline6),
+                                    tag: "${(song.title)}",
+                                    child: Text(song.title,
+
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .headline6),
+                                  ),
                                   /*
                                   Text(song.artist,
                                       overflow: TextOverflow.ellipsis,
