@@ -173,7 +173,7 @@ class _PlayMusicState extends State<PlayMusic> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            MS(icon: Icons.play_arrow_rounded,
+                            MusicSystem(icon: Icons.play_arrow_rounded,
                               function: () async{
                                 audioPlayer.stop();
 
@@ -190,25 +190,24 @@ class _PlayMusicState extends State<PlayMusic> {
                                 });
 
                               },),
-                            MS(icon: Icons.pause,
+                            MusicSystem(icon: Icons.pause,
                             function: () async{
                               await audioPlayer.pause();
                               initAudioPlayer();
 
                             },),
-                            MS(icon: Icons.stop,
+                            MusicSystem(icon: Icons.stop,
                             function: () async{
-
-                              //print("*********${audioPlayer.duration}");
-
                               await audioPlayer.stop();
                               audioManagerInstance.stop();
                             },),
-                            MS(icon: Icons.forward_30,
+
+                            MusicSystem(icon: Icons.forward_30,
                             function: ()async{
                               audioPlayer.seek(((position.inMilliseconds + 30000)/1000).toDouble());
                             },),
-                            MS(icon: Icons.replay_30_outlined,
+
+                            MusicSystem(icon: Icons.replay_30_outlined,
                             function: () async{
                               audioPlayer.seek(((position.inMilliseconds - 30000)/1000).toDouble());
 
@@ -253,17 +252,18 @@ class _PlayMusicState extends State<PlayMusic> {
   }
 }
 
-class MS extends StatefulWidget {
+class MusicSystem extends StatefulWidget {
 
   IconData icon;
   Function function;
-  MS({this.icon, this.function});
+  
+  MusicSystem({this.icon, this.function});
 
   @override
-  _MSState createState() => _MSState();
+  _MusicSystemState createState() => _MusicSystemState();
 }
 
-class _MSState extends State<MS> {
+class _MusicSystemState extends State<MusicSystem> {
 
   @override
   Widget build(BuildContext context) {
