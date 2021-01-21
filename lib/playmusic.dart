@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:audio_manager/audio_manager.dart';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:marquee/marquee.dart';
 import 'package:mp/seekbar.dart';
 import 'SongWidget.dart';
 import 'presenter/formatConverter.dart';
@@ -30,7 +32,8 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
   //AudioCache audioCache;
   var audioManagerInstance;
 
-  Animation flipAnimation;
+  Animation<double> flipAnimation;
+  Animation transformation;
   AnimationController animationController;
 
   @override
@@ -44,13 +47,21 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
     duration = Duration(seconds: 0);
     initAudioPlayer();
 
-    animationController = AnimationController(duration: Duration(seconds: 1), vsync: this);
-    flipAnimation = Tween(begin:  0.0, end: 1).animate(
+    animationController = AnimationController(duration: Duration(seconds: 5), vsync: this);
+    flipAnimation = Tween<double>(begin:  0.0, end: 1).animate(
         CurvedAnimation(parent: animationController,
             curve: Interval(
                 0,1, curve: Curves.linear
             ))
     );
+
+    transformation = BorderRadiusTween(
+        begin: BorderRadius.circular(125),
+        end: BorderRadius.circular(0)).animate(
+        CurvedAnimation(
+            parent: animationController,
+            curve: Curves.easeIn));
+
   }
 
   void now(){
@@ -101,6 +112,12 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
             //Duration(seconds: 0);
           });
         });
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    animationController.dispose();
   }
 
   @override
@@ -171,14 +188,22 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
 
+                        SizedBox(
+                          height: 50,
+                        ),
                         Hero(
                           tag: "${(widget.songName)}",
                           child: Text(widget.songName,
                               style: Theme.of(context).textTheme.headline6
                           ),
                         ),
+                        /*
+                        Container(
+                            height: 20,
+                            child: Marquee(text:  "${(widget.songName)}         ")
+                        ),*/
                         SizedBox(
-                          height: 20,
+                          height: 50,
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -190,18 +215,34 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                         ),
 
                         SizedBox(
-                          height: 20,
+                          height: 50,
                         ),
 
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+
+                            MusicSystem(icon: Icons.replay_30_outlined,
+                              function: () async{
+                                audioPlayer.seek(((position.inMilliseconds - 30000)/1000).toDouble());
+
+                              },),
+
+
+                            MusicSystem(icon: Icons.pause,
+                            function: () async{
+                              await audioPlayer.pause();
+                              //initAudioPlayer();
+                              animationController.stop();
+                            },),
+
                             MusicSystem(icon: Icons.play_arrow_rounded,
                               function: () async{
                                 audioPlayer.stop();
 
                                 await audioPlayer.play(widget.songpath, isLocal: true);
+                                animationController.repeat();
 
                                 audioManagerInstance
                                     .start("${widget.songpath}",
@@ -213,29 +254,23 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                                   print(err);
                                 });
 
-                              },),
-                            MusicSystem(icon: Icons.pause,
-                            function: () async{
-                              await audioPlayer.pause();
-                              initAudioPlayer();
+                              },
+                            ),
 
-                            },),
                             MusicSystem(icon: Icons.stop,
-                            function: () async{
+                              function: () async{
                               await audioPlayer.stop();
                               audioManagerInstance.stop();
-                            },),
+                              animationController.reset();
+                              },
+                            ),
 
                             MusicSystem(icon: Icons.forward_30,
                             function: ()async{
                               audioPlayer.seek(((position.inMilliseconds + 30000)/1000).toDouble());
                             },),
 
-                            MusicSystem(icon: Icons.replay_30_outlined,
-                            function: () async{
-                              audioPlayer.seek(((position.inMilliseconds - 30000)/1000).toDouble());
 
-                            },),
 
                           ],
                         ),
@@ -252,20 +287,51 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          RawMaterialButton(
-                            onPressed: (){
+                          AnimatedBuilder(
+                            animation: animationController,
+                            builder: (BuildContext context, Widget child) {
+                              return Transform(
+                                transform: Matrix4.identity()
+                                  //..setEntry(3, 2, 0.005)
+                                  //..rotateY(2*pi* flipAnimation.value)
+                                ,
+                                child: RawMaterialButton(
+                                  onPressed: (){
 
+                                  },
+                                  elevation: 10.0,
+                                  fillColor: Color(0xFFC3F5FF),
+                                  child: Hero(
+                                    tag: 'logo',
+                                    child: RotationTransition(
+                                      turns: flipAnimation,
+                                      child: Image.asset('assets/images/headphones.png',
+                                        height: MediaQuery.of(context).size.width/2.5,
+                                        width: MediaQuery.of(context).size.width/2.5,),
+                                    ),
+                                  ),//Icon(Icons.music_note, size: 180,),
+                                  padding: EdgeInsets.all(30.0),
+                                  shape: CircleBorder(),
+                                ),
+                              );
                             },
-                              elevation: 10.0,
-                              fillColor: Color(0xFFC3F5FF),
-                              child: Hero(
-                                tag: 'logo',
-                                child: Image.asset('assets/images/headphones.png',
-                                  height: MediaQuery.of(context).size.width/2.5,
-                                  width: MediaQuery.of(context).size.width/2.5,),
-                              ),//Icon(Icons.music_note, size: 180,),
-                            padding: EdgeInsets.all(30.0),
-                            shape: CircleBorder(),
+                            /*
+                            child: RawMaterialButton(
+                              onPressed: (){
+
+                              },
+                                elevation: 10.0,
+                                fillColor: Color(0xFFC3F5FF),
+                                child: Hero(
+                                  tag: 'logo',
+                                  child: Image.asset('assets/images/headphones.png',
+                                    height: MediaQuery.of(context).size.width/2.5,
+                                    width: MediaQuery.of(context).size.width/2.5,),
+                                ),//Icon(Icons.music_note, size: 180,),
+                              padding: EdgeInsets.all(30.0),
+                              shape: CircleBorder(),
+                            ),
+                            */
                           ),
 
                         ],
@@ -283,8 +349,8 @@ class MusicSystem extends StatefulWidget {
 
   IconData icon;
   Function function;
-  
-  MusicSystem({this.icon, this.function});
+
+  MusicSystem({this.icon, this.function,});
 
   @override
   _MusicSystemState createState() => _MusicSystemState();
@@ -299,11 +365,17 @@ class _MusicSystemState extends State<MusicSystem> {
         flex: 1,
         child: RawMaterialButton(
           onPressed: (){
-            widget.function();
+            //widget.function();
           },
           //elevation: 2.0,
           fillColor: Color(0xFF70C4D5),
-          child: Icon(widget.icon, color: Colors.white,
+          child: IconButton(
+            icon: Icon(widget.icon,
+              color: Colors.white,
+            ),
+            onPressed: (){
+               widget.function();
+            },
           ),
           shape: CircleBorder(),
         ),
