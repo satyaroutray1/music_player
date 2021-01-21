@@ -22,6 +22,8 @@ class PlayMusic extends StatefulWidget {
 
 enum PlayerState { stopped, playing, paused }
 
+Duration duration;
+Duration position;
 class _PlayMusicState extends State<PlayMusic> {
   AudioPlayer audioPlayer;
   //AudioCache audioCache;
@@ -34,11 +36,17 @@ class _PlayMusicState extends State<PlayMusic> {
     audioPlayer = new AudioPlayer();
     //audioCache = new AudioCache(fixedPlayer: audioPlayer);
     audioManagerInstance = AudioManager.instance;
+    position = Duration(milliseconds: 0);
+    duration = Duration(seconds: 0);
     initAudioPlayer();
+
   }
 
-  Duration duration;
-  Duration position;
+  void now(){
+    print(position.runtimeType);
+  }
+
+
   PlayerState playerState = PlayerState.stopped;
 
   StreamSubscription _positionSubscription;
@@ -83,9 +91,6 @@ class _PlayMusicState extends State<PlayMusic> {
           });
         });
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -201,6 +206,7 @@ class _PlayMusicState extends State<PlayMusic> {
                             },),
                             MS(icon: Icons.forward_30,
                             function: ()async{
+                              print("${formatDuration(audioManagerInstance.position)}");
                             },),
                             MS(icon: Icons.replay_30_outlined),
 

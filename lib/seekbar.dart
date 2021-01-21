@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'PlayBackControls.dart';
 import 'SongWidget.dart';
+import 'package:mp/playmusic.dart';
 import 'presenter/formatConverter.dart';
+
 
 class SeekBar extends StatefulWidget {
   final String duration;
-  SeekBar({this.duration});
+  final Duration currentPosition;
+  SeekBar({this.duration, this.currentPosition});
   @override
   _SeekBarState createState() => _SeekBarState();
 }
@@ -22,19 +25,23 @@ class _SeekBarState extends State<SeekBar> {
     print("formatDuration(audioManagerInstance.position): ${formatDuration(audioManagerInstance.position)}");
     print("formatDuration(audioManagerInstance.duration${parseToMinutesSeconds(int.parse(widget.duration))}))");
 
-    //print("formatDuration(audioManagerInstance.duration${(widget.duration).runtimeType}))");
+    print("${(parseToMinutesSeconds(duration.inMilliseconds))}");
 
+    print("${(duration).runtimeType}");
+    //print("formatDuration(audioManagerInstance.duration${(widget.duration).runtimeType}))");
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
         Text(
-          formatDuration(audioManagerInstance.position),
-          //widget.time.inSeconds.toString(),
+          //formatDuration(audioManagerInstance.position),
+          parseToMinutesSeconds(position.inMilliseconds),
           style: Theme.of(context).textTheme.subtitle2,
         ),
+
         Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 5),
@@ -74,6 +81,7 @@ class _SeekBarState extends State<SeekBar> {
                 )),
           ),
         ),
+
         Text(
           //formatDuration(audioManagerInstance.duration),
           parseToMinutesSeconds(int.parse(widget.duration)),
@@ -85,6 +93,5 @@ class _SeekBarState extends State<SeekBar> {
 }
 void seekToSecond(int second){
   Duration newDuration = Duration(seconds: second);
-
   //audioPlayer.seek(newDuration);
 }
