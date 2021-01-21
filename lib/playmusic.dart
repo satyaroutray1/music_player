@@ -206,9 +206,13 @@ class _PlayMusicState extends State<PlayMusic> {
                             },),
                             MS(icon: Icons.forward_30,
                             function: ()async{
-                              print("${formatDuration(audioManagerInstance.position)}");
+                              audioPlayer.seek(((position.inMilliseconds + 30000)/1000).toDouble());
                             },),
-                            MS(icon: Icons.replay_30_outlined),
+                            MS(icon: Icons.replay_30_outlined,
+                            function: () async{
+                              audioPlayer.seek(((position.inMilliseconds - 30000)/1000).toDouble());
+
+                            },),
 
                           ],
                         ),
