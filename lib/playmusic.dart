@@ -196,7 +196,8 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                         Hero(
                           tag: "${(widget.songName)}",
                           child: Text(widget.songName,
-                              style: Theme.of(context).textTheme.headline6
+                              style: Theme.of(context).textTheme.headline6,
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         /*
