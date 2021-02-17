@@ -1,10 +1,9 @@
 import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
 
-import 'PlayBackControls.dart';
-import 'SongWidget.dart';
-import 'package:mp/playmusic.dart';
-import 'presenter/formatConverter.dart';
+import '../../PlayBackControls.dart';
+import 'package:mp/view/ui/playmusic.dart';
+import '../../presenter/formatConverter.dart';
 
 
 class SeekBar extends StatefulWidget {
@@ -28,7 +27,6 @@ class _SeekBarState extends State<SeekBar> {
     print("${(parseToMinutesSeconds(duration.inMilliseconds))}");
 
     print("${(duration).runtimeType}");
-    //print("formatDuration(audioManagerInstance.duration${(widget.duration).runtimeType}))");
   }
 
 

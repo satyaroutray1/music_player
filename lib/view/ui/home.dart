@@ -1,11 +1,8 @@
-
-import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
-import 'package:path_provider/path_provider.dart';
-import 'adart_icons.dart';
-import 'LoadingIndicator.dart';
-import 'SongWidget.dart';
+import '../../model/DB.dart';
+import '../widgets/LoadingIndicator.dart';
+import '../widgets/song_list_widget.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -13,7 +10,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
 
   @override
   void initState() {
@@ -55,7 +51,8 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text('Music Player', style: TextStyle(
-                              fontSize: 30, color: Colors.white
+                              fontSize: Theme.of(context).textTheme.headline4.fontSize,
+                                color: Colors.white
                             ),textAlign: TextAlign.right,),
 
 
@@ -83,8 +80,6 @@ class _HomeState extends State<Home> {
                                       borderRadius: BorderRadius.circular(18.0),
                                       //side: BorderSide(color: Colors.red)
                                     ),
-
-
                                   ),
                                 ),
                                 SizedBox(
@@ -108,8 +103,8 @@ class _HomeState extends State<Home> {
 
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(40),
-                            topRight: Radius.circular(40)),
-
+                            topRight: Radius.circular(40)
+                        ),
                       ),
                       padding: EdgeInsets.only(left: 20, right: 20),
                       child: Column(
@@ -121,7 +116,7 @@ class _HomeState extends State<Home> {
                               builder: (context, snapshot) {
                                 List<SongInfo> songInfo = snapshot.data;
                                 if (snapshot.hasData) {
-                                  return SongWidget(songList: songInfo);
+                                  return SongListWidget(songList: songInfo);
                                 }
                                 return LoadingIndicator();
                               },

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mp/home.dart';
+import 'package:mp/view/ui/home.dart';
 
-void main() {
+import 'model/DB.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await sharedPrefs.init();
   runApp(MyApp());
 }
 
@@ -9,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'My Music Player',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
