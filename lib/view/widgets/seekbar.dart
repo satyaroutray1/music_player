@@ -1,7 +1,5 @@
-import 'package:audio_manager/audio_manager.dart';
 import 'package:flutter/material.dart';
 
-import '../../PlayBackControls.dart';
 import 'package:mp/view/ui/playmusic.dart';
 import '../../presenter/formatConverter.dart';
 
@@ -10,18 +8,16 @@ class SeekBar extends StatefulWidget {
   final String duration;
   final Duration currentPosition;
   SeekBar({this.duration, this.currentPosition});
+
   @override
   _SeekBarState createState() => _SeekBarState();
 }
-
-var audioManagerInstance = AudioManager.instance;
 
 class _SeekBarState extends State<SeekBar> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("formatDuration(audioManagerInstance.position): ${formatDuration(audioManagerInstance.position)}");
     print("formatDuration(audioManagerInstance.duration${parseToMinutesSeconds(int.parse(widget.duration))}))");
 
     print("${(parseToMinutesSeconds(duration.inMilliseconds))}");
@@ -63,17 +59,9 @@ class _SeekBarState extends State<SeekBar> {
                   max: (int.parse(widget.duration)).toDouble(),
                   value: (position.inMilliseconds).toDouble(),
                   onChanged: (value) {
-                    setState(() {
-                      slider = value;
-                    });
+
                   },
                   onChangeEnd: (value) {
-                    if (audioManagerInstance.duration != null) {
-                      Duration msec = Duration(
-                          milliseconds:
-                          (audioManagerInstance.duration.inMilliseconds * value).round());
-                      audioManagerInstance.seekTo(msec);
-                    }
                   },
                 )),
           ),

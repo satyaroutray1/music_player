@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:audio_manager/audio_manager.dart';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
-import 'package:mp/view/widgets/song_list_widget.dart';
 import 'package:mp/view/ui/home.dart';
 import 'package:mp/view/widgets/seekbar.dart';
 import '../../model/DB.dart';
@@ -26,20 +24,18 @@ enum PlayerState { stopped, playing, paused }
 
 Duration duration;
 Duration position;
-class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMixin{
+AudioPlayer audioPlayer;
+bool isSongPaused;
 
-  AudioPlayer audioPlayer;
-  var audioManagerInstance;
+class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMixin{
 
   Animation<double> flipAnimation;
   Animation transformation;
   AnimationController animationController;
-  bool isSongPaused;
 
   @override
   void initState() {
     audioPlayer = new AudioPlayer();
-    audioManagerInstance = AudioManager.instance;
     position = Duration(milliseconds: 0);
     duration = Duration(seconds: 0);
     initAudioPlayer();
@@ -252,24 +248,13 @@ class _PlayMusicState extends State<PlayMusic> with SingleTickerProviderStateMix
                                     await audioPlayer.play(widget.songpath, isLocal: true);
                                     animationController.repeat();
 
-                                    audioManagerInstance
-                                        .start("${widget.songpath}",
-                                        widget.songInfo.title,
-                                        auto: true,
-                                        cover: widget.songInfo.albumArtwork)
-                                        .then((err) {
-                                      print(err);
-                                    });
-
                                     sharedPrefs.setCurrentSongName("${widget.songName}");
-
                                   },
                                 ),
 
                                 music_player_button(icon: Icons.stop,
                                   function: () async{
                                     await audioPlayer.stop();
-                                    audioManagerInstance.stop();
                                     animationController.reset();
                                   },
                                 ),

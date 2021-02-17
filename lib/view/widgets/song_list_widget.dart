@@ -1,4 +1,3 @@
-import 'package:audio_manager/audio_manager.dart';
 import 'package:mp/model/DB.dart';
 import 'package:mp/view/ui/playmusic.dart';
 
@@ -17,11 +16,9 @@ class SongListWidget extends StatefulWidget {
 }
 
 class _SongListWidgetState extends State<SongListWidget> with TickerProviderStateMixin {
-  var audioManagerInstance;
 
   @override
   void initState() {
-    audioManagerInstance = AudioManager.instance;
     super.initState();
   }
 

@@ -1,6 +1,18 @@
 part of 'player_bloc.dart';
 
-@immutable
-abstract class PlayerState {}
+abstract class PlayerState {
+}
 
 class PlayerInitial extends PlayerState {}
+
+class PlayState extends PlayerState{
+
+}
+
+class PauseState extends PlayerState{
+
+}
+
+class StopState extends PlayerState{
+
+}
