@@ -1,5 +1,5 @@
-name: mp
-description: A new Flutter application.
+name: SkyMusicPlayer
+description: A Music Player application.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -53,7 +53,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/audio/new.mp3
+    - assets/audio/
     - assets/images/
   #   - images/a_dot_ham.jpeg
 

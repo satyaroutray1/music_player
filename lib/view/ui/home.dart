@@ -1,7 +1,7 @@
+import 'package:SkyMusicPlayer/view/ui/playmusic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
-import 'package:mp/view/ui/playmusic.dart';
 import '../../model/DB.dart';
 import '../widgets/LoadingIndicator.dart';
 import '../widgets/song_list_widget.dart';

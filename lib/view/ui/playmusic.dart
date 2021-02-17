@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:SkyMusicPlayer/view/widgets/seekbar.dart';
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
-import 'package:mp/view/ui/home.dart';
-import 'package:mp/view/widgets/seekbar.dart';
 import '../../model/DB.dart';
 import '../../presenter/formatConverter.dart';
 import '../widgets/music_player_button.dart';
+import 'home.dart';
 
 class PlayMusic extends StatefulWidget {
 

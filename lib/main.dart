@@ -1,5 +1,5 @@
+import 'package:SkyMusicPlayer/view/ui/home.dart';
 import 'package:flutter/material.dart';
-import 'package:mp/view/ui/home.dart';
 
 import 'model/DB.dart';
 

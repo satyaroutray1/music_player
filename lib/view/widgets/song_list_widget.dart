@@ -1,6 +1,7 @@
-import 'package:mp/model/DB.dart';
-import 'package:mp/view/ui/playmusic.dart';
 
+
+import 'package:SkyMusicPlayer/model/DB.dart';
+import 'package:SkyMusicPlayer/view/ui/playmusic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import '../../presenter/formatConverter.dart';
